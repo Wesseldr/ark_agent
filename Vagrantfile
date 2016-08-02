@@ -42,7 +42,7 @@ EOT
 service mongod start
 
 # Install Python environment
-apt-get install -y python-pip python-pandas
+apt-get install -y python-pip
 pip install --upgrade pip
 
 pip install celery pymongo ystockquote finsymbols pyyaml flower jupyter
