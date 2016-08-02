@@ -17,7 +17,7 @@ wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-ke
 echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sources.list.d/rabbitmq.list
 
 apt-get update
-apt-get install -y --allow-unauthenticated mongodb-org
+apt-get install -y --allow-unauthenticated mongodb-org-server mongodb-org-shell mongodb-org-tools
 
 apt-get install -y --allow-unauthenticated rabbitmq-server
 rabbitmq-plugins enable rabbitmq_management
@@ -44,12 +44,13 @@ service mongod start
 # Install Python environment
 apt-get install -y python-pip
 pip install --upgrade pip
+apt-get install -y python-pandas python-numpy python-matplotlib
 
 pip install celery pymongo ystockquote finsymbols pyyaml flower jupyter
 
 # Create indexes
 bash /vagrant/ark_agent/setup_mongo_indices.sh >/dev/null
-
+ln -s /vagrant/notebooks ~vagrant/notebooks
 # Setup screen environment as user vagrant
 sudo su - vagrant <<'VAGRANT'
 cat <<EOTSCREEN >> ~/.screenrc
@@ -65,6 +66,7 @@ screen -AdmS stack -t Bash bash -c "bash"
 sleep 2
 screen -S stack -X screen -t Jupyter bash -c "jupyter notebook --no-browser --ip 0.0.0.0 --port 8888; bash"
 sleep 2
+cd ~
 screen -S stack -X screen -t Flower bash -c "celery flower --broker=amqp://guest:guest@localhost:5672//; bash"
 sleep 2
 cd /vagrant

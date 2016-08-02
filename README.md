@@ -14,6 +14,12 @@ Added in this fork:
 - iPython/Jupyter notebook for writing & testing your own code
 - Vagrant for wrapping it all up in a single ubuntu-16.04 box
 
+Mathlibs
+- numpy
+- pandas
+- SciPy
+- matplotlib
+
 The ark agent is running in a full Vagrant box including the following web services:
 - Celery Flower web interface (http://localhost:5555)
 - iPhython/Jupyter notebook web interface (http://localhost:8888)
@@ -29,6 +35,8 @@ run: ``vagrant up``
 Every thing will be setup for you. When the creation of the Vagrant ubuntu box is finished, login with:
 
 ``vagrant ssh`` and use ``screen -r`` to access the output of: Jupyter, Flower and Celery.
+
+[ctrl-a "] for a list of screens
 
 Don't forget to connect your browser to the web interfaces on port 5555, 8888 and 15672
 ##Services
