@@ -10,12 +10,13 @@ file_path = os.path.abspath(config_dir) + os.sep + 'mongo_settings.yaml'
 config_file = open(file_path,'r')
 config_data = yaml.load(config_file)
 
-BROKER_URL = "mongodb://%s:%d/jobs" %(config_data['hostname'],config_data['port'])
+BACKEND_URL = "mongodb://%s:%d/jobs" %(config_data['hostname'],config_data['port'])
+BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 
 #Loads settings for Backend to store results of jobs
 celery = Celery('ark_agent.celery',
 		broker=BROKER_URL,
-		backend=BROKER_URL,
+		backend=BACKEND_URL,
 		include=['ark_agent.stock_eod_data'])  #list of modules to import when Celery starts
 
 
