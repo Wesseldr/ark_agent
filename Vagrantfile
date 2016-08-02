@@ -18,28 +18,15 @@ echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sour
 
 apt-get update
 apt-get install -y --allow-unauthenticated mongodb-org-server mongodb-org-shell mongodb-org-tools
+mkdir /data
+mkdir /data/db
+chmod 777 /data/db
 
 apt-get install -y --allow-unauthenticated rabbitmq-server
 rabbitmq-plugins enable rabbitmq_management
 rabbitmqctl add_user admin admin
 rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"
 rabbitmqctl set_user_tags admin administrator
-
-cat <<EOT >> /lib/systemd/system/mongod.service
-[Unit]
-Description=High-performance, schema-free document-oriented database
-After=network.target
-Documentation=https://docs.mongodb.org/manual
-
-[Service]
-User=mongodb
-Group=mongodb
-ExecStart=/usr/bin/mongod --quiet --config /etc/mongod.conf
-
-[Install]
-WantedBy=multi-user.target
-EOT
-service mongod start
 
 # Install Python environment
 apt-get install -y python-pip
@@ -64,6 +51,8 @@ EOTSCREEN
 
 screen -AdmS stack -t Bash bash -c "bash"
 sleep 2
+screen -S stack -X screen -t MongoDB bash -c "sudo /usr/bin/mongod; bash"
+sleep 2
 screen -S stack -X screen -t Jupyter bash -c "jupyter notebook --no-browser --ip 0.0.0.0 --port 8888; bash"
 sleep 2
 cd ~
@@ -81,6 +70,10 @@ Vagrant.configure("2") do |config|
   config.vm.box = "bento/ubuntu-16.04"
   config.vm.provision "shell", inline: $script
 
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 4096
+    v.cpus = 4
+  end
   # MongoDB
   config.vm.network :forwarded_port, guest: 27017, host: 27017
 

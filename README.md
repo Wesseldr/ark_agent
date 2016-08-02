@@ -34,7 +34,7 @@ run: ``vagrant up``
 
 Every thing will be setup for you. When the creation of the Vagrant ubuntu box is finished, login with:
 
-``vagrant ssh`` and use ``screen -r`` to access the output of: Jupyter, Flower and Celery.
+``vagrant ssh`` and use ``screen -r`` to access the output of: MongoDB, Jupyter, Flower and Celery.
 
 [ctrl-a "] for a list of screens
 
@@ -48,5 +48,9 @@ host: localhost
 port: 5672    
 username: guest  
 password: guest
+
+VirtualBox settings:
+    v.memory = 4096
+    v.cpus = 4
 
 _composed by JWR, aug-2016_, feel free to clone/fork change/use :-)
